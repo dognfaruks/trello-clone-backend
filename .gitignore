@@ -1,0 +1,12 @@
+node_modules
+.env
+/src/generated/prisma
+node_modules
+.env
+.windsurf
+node_modules
+.env
+.windsurf
+.agents
+.claude
+skills-lock.json
