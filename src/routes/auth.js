@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const authMiddleware = require('../middleware/auth');
+const checkAdmin = require('../middleware/checkAdmin');
 
 // Kayıt ol
 router.post(
@@ -59,5 +61,15 @@ router.post(
     }
   }
 );
-
+// Sadece admin: tüm kullanıcıları listeleme
+router.get('/users', authMiddleware, checkAdmin, async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: { id: true, name: true, email: true, role: true, createdAt: true }
+    });
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;
